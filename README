@@ -1,0 +1,34 @@
+
+Device-ul este bazat pe o placuta Arduino care citeste datele de la cele trei componente esentiale pentru descrierea gradului de poluare a apelor si anume: 
+un senzor pentru determinarea nivelului de apa, un senzor care detecteaza calitatea apei prin masurarea nivelului de turbiditate si un LED care este 
+atasat la photorezistor care lumineaza in cazul in care sunt substante insolubile prezente in apa(petrol, ulei, mercur etc) sau daca luminozitatea 
+din mediu este foarte scazuta. Rezultatele obtinute vor fi convertite si vor fi afisate atat pe LCD, folosind interfata seriala dar si pe Laptop, 
+sub forma unor statistici pe o perioada lunga de timp.
+
+Lista piese:
+
+	Arduino UNO
+	Water Level Sensor
+	Turbidity Sensor
+	Photoresistor
+	Display LCD 1602 cu Interfata I2C
+	2 Rezistori (220Ω)
+	Modul Bluetooth 4.0 BLE
+	Fire
+	Breadboard
+	
+Descriere implementare
+In implementarea acestui proiect, am folosit cele 3 componente care m-au ajutat la caracterizarea gradului de poluare astfel: 
+senzorul de turbiditate masoara daca apa contine particule din alte substante prin valorile obtinute de la senzor in 
+Volti(pentru apa curata valoarea normala este de 4.1 - 4.2V). Pentru cazurile in care calitatea apei este slaba se vor 
+obtine valori mai mici decat 4.1V.
+
+Photoresistorul depisteaza luminozitatea din mediul in care se fac masuratorile, astfel led-ul cu care este legat va 
+lumina pentru cazurile in care afara este noapte sau incaperea este destul de intunecata, dar si pentru cazul in care apa este destul de poluata. 
+Pentru afisarea gradului de poluare am utilizat un LCD.
+
+Senzorul de nivel de apa va ajuta pentru determinarea cresterilor sau scaderilor anormale ale raurilor, semnaland acest lucru cu ajutorul LCD-ului.
+ Toate datele sunt trimise mai departe prin intermediul modului bluetooth la computer unde mai departe sunt procesate si afisate cu ajutorul unui
+ grafic pentru o analizare mai amanuntita.
+
+Graficul combina datele obtinute atat de la senzorul de turbiditate, cat si de la senzorul de nivel de apa.
