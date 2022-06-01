@@ -8,12 +8,16 @@ from drawnow import *
 levelVec = []
 ntuVec = []
 
-port = "COM7"
+#Listening port
+port = "COM5"
 bluetooth = serial.Serial(port, 9600)
 plt.ion()
 cnt = 0
 xMax = 0
 
+#I'm trying to produce the graphic using the values received from bluetooth
+#the graphic will contain 2 axes: one for values received from turbidity sensor
+#and another for values received from water level sensor
 def makeFig():
 	plt.ylim(0, 5)
 	plt.title("Streaming values of water")
@@ -30,18 +34,19 @@ def makeFig():
 	plt2.ticklabel_format(useOffset=False)
 	plt2.legend(loc='upper right')
 
+
 while True:
-	while(bluetooth.inWaiting() == 0):
+	while bluetooth.inWaiting() == 0:
 		pass
+	#parsing the received data
 	arduinoString = bluetooth.readline()
 	line = arduinoString.decode()
 	finalString = line.strip()
 	dataArray = finalString.split(", ")
-
 	levelValue = float(dataArray[1])
 	voltageValue = float(dataArray[0])
-	print(levelValue)
-	print(voltageValue)
+	# print(levelValue)
+	# print(voltageValue)
 	levelVec.append(levelValue)
 	ntuVec.append(voltageValue)
 	drawnow(makeFig)
