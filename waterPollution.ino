@@ -14,11 +14,9 @@ SoftwareSerial bluetooth(2, 3);
 #define sensorTurPin A2
 
 float volt;
-//float ntu;
 int sensorValue = 0;
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
   bluetooth.begin(9600);
   
@@ -34,7 +32,8 @@ void setup() {
   digitalWrite(sensorPower, LOW);
 
 }
-
+//the power of the sensor is not constant
+//to avoid an harmful environemnt for sensor
 int sensorWaterRead() {
   digitalWrite(sensorPower, HIGH);
   delay(10);
@@ -55,8 +54,9 @@ float round_to_dp( float in_value, int decimal_place )
 void loop() {
   int photoValue = analogRead(photoPin);
   lcd.setCursor(0, 0);
-  
+  //reading values of water sensor
   int level = sensorWaterRead();
+  //set up of lcd for a good display of collected data
   lcd.print("Level:        ");
   lcd.setCursor(7, 0);
   if(level > 420 && level <= 520) {
@@ -69,6 +69,7 @@ void loop() {
       lcd.print("HIGH");
   }
 
+  //i decided to take 800 samples and then average those samples:
   volt = 0;
   for(int i=0; i<800; i++) {
     volt += ((float)analogRead(sensorTurPin)/1023)*5;
@@ -76,21 +77,18 @@ void loop() {
   volt = volt/800;
   volt = round_to_dp(volt,1);
   
-//  if (volt < 2.5){
-//    ntu = 3000;
-//  } else{
-//    ntu = -1120.4*square(volt)+5742.3*volt-4353.8; 
-//  }
+//trying to send data using bluetooth
+  if(bluetooth.available()) {
+    bluetooth.print(volt);
+    bluetooth.print(" , ");
+    bluetooth.println(level);
+  }
 
-  //if(bluetooth.available()) {
-    Serial.print(volt);
-    Serial.print(" , ");
-    Serial.println(level);
-  //}
-
+  //reposition of the cursor in second row
   lcd.setCursor(0, 1);
   lcd.print("Pollution:        ");
   lcd.setCursor(10, 1);
+  //trying to display the state of the water from glass
   if(volt >= 4 && volt < 4.3) {
     lcd.print("CLEAN");
   } else if(volt >= 3.2 && volt < 4) {
@@ -100,7 +98,8 @@ void loop() {
   } else if(volt < 2.5) {
     lcd.print("HIGH");
   }
-
+  //if the light is not good for measurement or the water is polluted
+  //then the led will light on
   if(photoValue <= 50 || volt < 2.5) {
     digitalWrite(ledPin, HIGH);
   } else {
